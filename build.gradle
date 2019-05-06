@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group 'com.shakhar.anki'
@@ -16,3 +17,5 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     implementation 'com.github.tenbergen:anki-drive-java:0.1.2'
 }
+
+mainClassName = 'com.shakhar.anki.intersectionhandler.Main'
