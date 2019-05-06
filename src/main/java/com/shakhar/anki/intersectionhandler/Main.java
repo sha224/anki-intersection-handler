@@ -38,7 +38,8 @@ public class Main {
         Vehicle myVehicle = configVehicle;
         myVehicle.connect();
         myVehicle.sendMessage(new SdkModeMessage());
-        myVehicle.sendMessage(new SetSpeedMessage(300, 300));
+        int speed = Integer.parseInt(properties.getProperty("anki.vehicle.speed", "300"));
+        myVehicle.sendMessage(new SetSpeedMessage(speed, speed));
         Runtime.getRuntime().addShutdownHook(new Thread(() -> myVehicle.disconnect()));
     }
 }
