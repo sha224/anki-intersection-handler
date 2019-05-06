@@ -12,6 +12,8 @@ import java.util.List;
 
 public class VehicleController {
 
+    private final int ACCELERATION = 10000;
+
     private String vehicleAddress;
     private int speed;
     private Vehicle vehicle;
@@ -36,10 +38,21 @@ public class VehicleController {
     public void run() {
         if (vehicle == null)
             return;
-        Vehicle myVehicle = vehicle;
-        myVehicle.connect();
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> myVehicle.disconnect()));
-        myVehicle.sendMessage(new SdkModeMessage());
-        myVehicle.sendMessage(new SetSpeedMessage(speed, speed));
+        vehicle.connect();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> vehicle.disconnect()));
+        vehicle.sendMessage(new SdkModeMessage());
+        vehicle.sendMessage(new SetSpeedMessage(speed, ACCELERATION));
+        LocalizationIntersectionUpdateHandler liuh = new LocalizationIntersectionUpdateHandler();
+        vehicle.addMessageListener(LocalizationIntersectionUpdateMessage.class, liuh);
+    }
+
+    private class LocalizationIntersectionUpdateHandler implements MessageListener<LocalizationIntersectionUpdateMessage> {
+
+        @Override
+        public void messageReceived(LocalizationIntersectionUpdateMessage message) {
+            if (message.getIntersectionCode() == 1) {
+                vehicle.sendMessage(new SetSpeedMessage(0, ACCELERATION));
+            }
+        }
     }
 }
