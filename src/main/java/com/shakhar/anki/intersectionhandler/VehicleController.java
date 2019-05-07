@@ -98,7 +98,7 @@ public class VehicleController {
         broadcastEntry();
         lock.lock();
         try {
-            while (!isSelfAddress(list.get(0)))
+            while (!(list.isEmpty() || isSelfAddress(list.get(0))))
                 firstInList.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -134,7 +134,8 @@ public class VehicleController {
     }
 
     private void multicastSend(byte b) {
-        DatagramPacket packet = new DatagramPacket(new byte[b], 1, groupAddress, MULTICAST_PORT);
+        byte[] data = new byte[]{b};
+        DatagramPacket packet = new DatagramPacket(data, data.length, groupAddress, MULTICAST_PORT);
         try {
             multicastSocket.send(packet);
         } catch (IOException e) {
