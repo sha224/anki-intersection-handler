@@ -6,6 +6,8 @@ import de.adesso.anki.Vehicle;
 import de.adesso.anki.messages.LocalizationPositionUpdateMessage;
 import de.adesso.anki.messages.SdkModeMessage;
 import de.adesso.anki.messages.SetSpeedMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.*;
@@ -15,6 +17,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class VehicleController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(VehicleController.class);
 
     private static final int ACCELERATION = 10000;
     private static final int INTERSECTION_PIECE_ID = 10;
@@ -88,6 +92,7 @@ public class VehicleController {
     }
 
     private void onEnteringIntersection() {
+        LOGGER.info("Entering Intersection");
         stop();
         long arrivalTime = System.currentTimeMillis();
         broadcastEntry();
@@ -114,14 +119,17 @@ public class VehicleController {
     }
 
     private void onExitingIntersection() {
+        LOGGER.info("Exiting Intersection");
         broadcastExit();
     }
 
     private void broadcastEntry() {
+        LOGGER.info("Broadcasting Entry");
         multicastSend(ENTRY_BYTE);
     }
 
     private void broadcastExit() {
+        LOGGER.info("Broadcasting Exit");
         multicastSend(EXIT_BYTE);
     }
 
@@ -153,6 +161,7 @@ public class VehicleController {
     }
 
     private void onEntryReceive(InetAddress sender) {
+        LOGGER.info("Received Entry Signal from {}", sender);
         lock.lock();
         try {
             list.add(sender);
@@ -162,6 +171,7 @@ public class VehicleController {
     }
 
     private void onExitReceive(InetAddress sender) {
+        LOGGER.info("Received Exit Signal from {}", sender);
         lock.lock();
         try {
             list.remove(sender);
