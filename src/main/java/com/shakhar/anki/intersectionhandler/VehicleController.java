@@ -26,6 +26,8 @@ public class VehicleController {
     private static final byte ENTRY_BYTE = 1;
     private static final byte EXIT_BYTE = 2;
 
+    private String ankiServerAddress;
+    private int ankiServerPort;
     private String vehicleAddress;
     private int speed;
     private Vehicle vehicle;
@@ -37,7 +39,9 @@ public class VehicleController {
     private Lock lock;
     private Condition firstInList;
 
-    public VehicleController(String vehicleAddress, int speed) throws IOException {
+    public VehicleController(String ankiServerAddress, int ankiServerPort, String vehicleAddress, int speed) throws IOException {
+        this.ankiServerAddress = ankiServerAddress;
+        this.ankiServerPort = ankiServerPort;
         this.vehicleAddress = vehicleAddress;
         this.speed = speed;
         groupAddress = InetAddress.getByName(MULTICAST_ADDRESS);
@@ -50,7 +54,7 @@ public class VehicleController {
     }
 
     public void initAnki() throws IOException {
-        AnkiConnector connector = new AnkiConnector("localhost", 5000);
+        AnkiConnector connector = new AnkiConnector(ankiServerAddress, ankiServerPort);
         List<Vehicle> vehicles = connector.findVehicles();
         for (Vehicle iterVehicle : vehicles) {
             if (iterVehicle.getAddress().equals(vehicleAddress)) {

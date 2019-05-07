@@ -15,11 +15,12 @@ public class Main {
             e.printStackTrace();
             return;
         }
+        String ankiServerAddress = properties.getProperty("anki.server.address", "localhost");
+        int ankiServerPort = Integer.parseInt(properties.getProperty("anki.server.port", "5000"));
         String vehicleAddress = properties.getProperty("anki.vehicle.address");
         int speed = Integer.parseInt(properties.getProperty("anki.vehicle.speed", "300"));
 
-        VehicleController vehicleController = new VehicleController(vehicleAddress, speed);
+        VehicleController vehicleController = new VehicleController(ankiServerAddress, ankiServerPort, vehicleAddress, speed);
         vehicleController.run();
     }
-
 }
