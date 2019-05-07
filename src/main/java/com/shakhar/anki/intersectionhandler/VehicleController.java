@@ -114,7 +114,7 @@ public class VehicleController {
                 public void run() {
                     go();
                 }
-            }, duration);
+            }, STOP_DURATION - duration);
         }
     }
 
